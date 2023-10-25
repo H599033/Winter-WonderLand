@@ -237,6 +237,7 @@ async function main() {
         }
     });
 
+
     window.addEventListener('keyup', (e) => {
         if (e.code === 'KeyW') {
             move.forward = false;
