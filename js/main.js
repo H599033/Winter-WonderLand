@@ -95,18 +95,23 @@ async function main() {
         heightmapImage,
         // noiseFn: simplex.noise.bind(simplex),
         numberOfSubdivisions: 128,
-        height: 20
+        height: 40
     });
+
+    const snowyRockTexture = new TextureLoader().load('resources/textures/snowy_rock_01.png');
+    snowyRockTexture.wrapS = RepeatWrapping;
+    snowyRockTexture.wrapT = RepeatWrapping;
+    snowyRockTexture.repeat.set(1500 / width, 1500 / width);
 
     const grassTexture = new TextureLoader().load('resources/textures/grass_02.png');
     grassTexture.wrapS = RepeatWrapping;
     grassTexture.wrapT = RepeatWrapping;
     grassTexture.repeat.set(5000 / width, 5000 / width);
 
-    const snowyRockTexture = new TextureLoader().load('resources/textures/snowy_rock_01.png');
-    snowyRockTexture.wrapS = RepeatWrapping;
-    snowyRockTexture.wrapT = RepeatWrapping;
-    snowyRockTexture.repeat.set(1500 / width, 1500 / width);
+    const snowTexture = new TextureLoader().load('resources/textures/snow-covered-land.jpg');
+    snowTexture.wrapS = RepeatWrapping;
+    snowTexture.wrapT = RepeatWrapping;
+    snowTexture.repeat.set(1000 / width, 1000 / width);
 
 
     const splatMap = new TextureLoader().load('resources/images/splatmap_01.png');
@@ -114,7 +119,7 @@ async function main() {
     const terrainMaterial = new TextureSplattingMaterial({
         color: 0xffffff,
         shininess: 0,
-        textures: [snowyRockTexture, grassTexture],
+        textures: [snowyRockTexture, grassTexture, snowTexture],
         splatMaps: [splatMap]
     });
 
@@ -213,7 +218,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
-        speed: 0.01
+        speed: 0.0225
     };
 
     window.addEventListener('keydown', (e) => {
