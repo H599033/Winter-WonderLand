@@ -18,6 +18,7 @@ import TextureSplattingMaterial from './materials/TextureSplattingMaterial.js';
 import TerrainBufferGeometry from './terrain/TerrainBufferGeometry.js';
 import { GLTFLoader } from './loaders/GLTFLoader.js';
 import { SimplexNoise } from './lib/SimplexNoise.js';
+import * as THREE from "./lib/three.module.js";
 
 async function main() {
 
@@ -32,6 +33,20 @@ async function main() {
     renderer.setClearColor(0xffffff);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    let skyBoxloader = new THREE.CubeTextureLoader();
+
+    let skyboxTexture = skyBoxloader.load([
+        'resources/skyBox/Sunset/Sunset-left.png','resources/skyBox/Sunset/Sunset-Right.png'
+        ,'resources/skyBox/Sunset/SunSett-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
+        ,'resources/skyBox/Sunset/SunSett-Back.png','resources/skyBox/Sunset/Sunset-front.png'
+    ])
+    let skybox = new THREE.Mesh(
+        new THREE.BoxGeometry(1000, 1000, 1000),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTexture ,side: THREE.DoubleSide} )
+    );
+    scene.add(skybox);
+
+    skybox.renderOrder = 1000;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
 
@@ -80,7 +95,7 @@ async function main() {
 
     /**
      * Add terrain:
-     * 
+     *
      * We have to wait for the image file to be loaded by the browser.
      * There are many ways to handle asynchronous flow in your application.
      * We are using the async/await language constructs of Javascript:
@@ -134,7 +149,7 @@ async function main() {
      * Add trees
      */
 
-    // instantiate a GLTFLoader:
+        // instantiate a GLTFLoader:
     const loader = new GLTFLoader();
 
     loader.load(
@@ -144,7 +159,7 @@ async function main() {
         (object) => {
             for (let x = -50; x < 50; x += 8) {
                 for (let z = -50; z < 50; z += 8) {
-                    
+
                     const px = x + 1 + (6 * Math.random()) - 3;
                     const pz = z + 1 + (6 * Math.random()) - 3;
 
@@ -159,7 +174,7 @@ async function main() {
                                 child.receiveShadow = true;
                             }
                         });
-                        
+
                         tree.position.x = px;
                         tree.position.y = height - 0.01;
                         tree.position.z = pz;
@@ -236,6 +251,7 @@ async function main() {
             e.preventDefault();
         }
     });
+
 
     window.addEventListener('keyup', (e) => {
         if (e.code === 'KeyW') {
