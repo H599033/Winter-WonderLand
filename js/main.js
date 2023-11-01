@@ -35,10 +35,10 @@ async function main() {
 
     let skyBoxloader = new THREE.CubeTextureLoader();
 
-    let skyboxSunsett = skyBoxloader.load([
+    let skyboxSunset = skyBoxloader.load([
         'resources/skyBox/Sunset/Sunset-left.png','resources/skyBox/Sunset/Sunset-Right.png'
         ,'resources/skyBox/Sunset/Sunset-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
-        ,'resources/skyBox/Sunset/Sunset-back.png','resources/skyBox/Sunset/Sunset-front.png'
+        ,'resources/skyBox/Sunset/Sunset-Back.png','resources/skyBox/Sunset/Sunset-front.png'
     ])
 
     let skyboxEarlyDusk = skyBoxloader.load([
@@ -74,11 +74,13 @@ async function main() {
         ,'resources/skyBox/TidligMorgen/TidligMorgen-Back.png','resources/skyBox/TidligMorgen/TidligMorgen-Front.png'
     ])
 
+    let skyBoxTextures = [skyboxSunset, skyboxEarlyDusk, skyboxEftermidag, skyboxMidnight, skyboxMorgen, skyboxNight, skyboxTidligMorgen];
 
     let skybox = new THREE.Mesh(
         new THREE.BoxGeometry(500, 500, 500),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxNoon ,side: THREE.DoubleSide} )
+        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen, side: THREE.BackSide })
     );
+
     scene.add(skybox);
 
     skybox.renderOrder = 1000;
@@ -112,8 +114,8 @@ async function main() {
     directionalLight.castShadow = true;
 
     //Set up shadow properties for the light
-    directionalLight.shadow.mapSize.width = 512;
-    directionalLight.shadow.mapSize.height = 512;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
     directionalLight.shadow.camera.near = 0.5;
     directionalLight.shadow.camera.far = 2000;
 
@@ -268,7 +270,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
-        speed: 0.0225
+        speed: 0.1
     };
 
     window.addEventListener('keydown', (e) => {
