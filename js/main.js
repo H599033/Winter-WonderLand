@@ -35,14 +35,49 @@ async function main() {
 
     let skyBoxloader = new THREE.CubeTextureLoader();
 
-    let skyboxTexture = skyBoxloader.load([
+    let skyboxSunsett = skyBoxloader.load([
         'resources/skyBox/Sunset/Sunset-left.png','resources/skyBox/Sunset/Sunset-Right.png'
-        ,'resources/skyBox/Sunset/SunSett-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
-        ,'resources/skyBox/Sunset/SunSett-Back.png','resources/skyBox/Sunset/Sunset-front.png'
+        ,'resources/skyBox/Sunset/Sunset-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
+        ,'resources/skyBox/Sunset/Sunset-back.png','resources/skyBox/Sunset/Sunset-front.png'
     ])
+
+    let skyboxEarlyDusk = skyBoxloader.load([
+        'resources/skyBox/EarlyDusk/EarlyDusk-Left.png','resources/skyBox/EarlyDusk/EarlyDusk-Right.png'
+        ,'resources/skyBox/EarlyDusk/EarlyDusk-bottom.png','resources/skyBox/EarlyDusk/EarlyDusk-top.png'
+        ,'resources/skyBox/EarlyDusk/EarlyDusk-Back.png','resources/skyBox/EarlyDusk/EarlyDusk-Front.png'
+    ])
+
+    let skyboxEftermidag = skyBoxloader.load([
+        'resources/skyBox/Eftermidag/Eftermidag-Left.png','resources/skyBox/Eftermidag/Eftermidag-Right.png'
+        ,'resources/skyBox/Eftermidag/Eftermidag-Bottom.png','resources/skyBox/Eftermidag/Eftermidag-Topp.png'
+        ,'resources/skyBox/Eftermidag/Eftermidag-back.png','resources/skyBox/Eftermidag/Eftermidag-Front.png'
+    ])
+    let skyboxMidnight = skyBoxloader.load([
+        'resources/skyBox/Midnight/MidNight-Left.png','resources/skyBox/Midnight/MidNight-Right.png'
+        ,'resources/skyBox/Midnight/MidNight-Bottum.png','resources/skyBox/Midnight/MidNight-Top.png'
+        ,'resources/skyBox/Midnight/MidNight-Back.png','resources/skyBox/Midnight/MidNight-Front.png'
+    ])
+
+    let skyboxMorgen = skyBoxloader.load([
+        'resources/skyBox/Morgen/Morgen-Left.png','resources/skyBox/Morgen/Morgen-Right.png'
+        ,'resources/skyBox/Morgen/Morgen-bottom.png','resources/skyBox/Morgen/Morgen-Top.png'
+        ,'resources/skyBox/Morgen/Morgen-Back.png','resources/skyBox/Morgen/Morgen-Front.png'
+    ])
+    let skyboxNight = skyBoxloader.load([
+        'resources/skyBox/Night/Night-left.png','resources/skyBox/Night/Night-Right.png'
+        ,'resources/skyBox/Night/Night-Bottom.png','resources/skyBox/Night/Night-Top.png'
+        ,'resources/skyBox/Night/Night-back.png','resources/skyBox/Night/Night-Front.png'
+    ])
+    let skyboxTidligMorgen = skyBoxloader.load([
+        'resources/skyBox/TidligMorgen/TidligMorgen-Left.png','resources/skyBox/TidligMorgen/TidligMorgen-Right.png'
+        ,'resources/skyBox/TidligMorgen/TidligMorgen-Bottom.png','resources/skyBox/TidligMorgen/TidligMorgen-top.png'
+        ,'resources/skyBox/TidligMorgen/TidligMorgen-Back.png','resources/skyBox/TidligMorgen/TidligMorgen-Front.png'
+    ])
+
+
     let skybox = new THREE.Mesh(
-        new THREE.BoxGeometry(1000, 1000, 1000),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTexture ,side: THREE.DoubleSide} )
+        new THREE.BoxGeometry(500, 500, 500),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxNoon ,side: THREE.DoubleSide} )
     );
     scene.add(skybox);
 
