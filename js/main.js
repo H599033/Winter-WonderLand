@@ -24,6 +24,12 @@ async function main() {
 
     const scene = new Scene();
 
+    // fog
+    const near = 1;
+    const far = 4500;
+    const color = 0xaaaaaa; // adjust color as needed
+    scene.fog = new THREE.Fog(color, near, far);
+
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
 
@@ -96,7 +102,7 @@ async function main() {
     // Funksjon for å bytte til neste skyboks
     function switchToNextSkybox() {
         const timeSinceLastChange = new Date().getTime() - lastSkyboxChangeTime;
-        const timePerSkyboxChange = 20000; // Tid per skyboksendring i millisekunder (her satt til 10 sekunder).
+        const timePerSkyboxChange = 10000; // Tid per skyboksendring i millisekunder (her satt til 10 sekunder).
 
         if (timeSinceLastChange >= timePerSkyboxChange) {
             currentSkyboxIndex = (currentSkyboxIndex + 1) % skyboxes.length;
@@ -172,7 +178,7 @@ async function main() {
         width,
         heightmapImage,
         // noiseFn: simplex.noise.bind(simplex),
-        numberOfSubdivisions: 1024,
+        numberOfSubdivisions: 128,
         height: 700
     });
 
@@ -294,15 +300,16 @@ async function main() {
     celestialGroup.add(moon);
 
     const distance = 3000;
-    const sunSpeed = 0.1;
-    const moonSpeed = 0.1;
+    const sunSpeed = 0.05;
+    const moonSpeed = 0.05;
 
+    const clock = new THREE.Clock();
     function animateCelestials() {
-        const time = Date.now() * 0.0005;
-        const sunX = distance * Math.cos(time * sunSpeed);
-        const sunY = distance * Math.sin(time * sunSpeed);
-        const moonX = distance * Math.cos(Math.PI + time * moonSpeed);
-        const moonY = distance * Math.sin(Math.PI + time * moonSpeed);
+        const elapsedTime = clock.getElapsedTime();
+        const sunX = distance * Math.cos(elapsedTime * sunSpeed);
+        const sunY = distance * Math.sin(elapsedTime * sunSpeed);
+        const moonX = distance * Math.cos(Math.PI + elapsedTime * moonSpeed);
+        const moonY = distance * Math.sin(Math.PI + elapsedTime * moonSpeed);
 
         sun.position.set(sunX, sunY, 0);
         moon.position.set(moonX, moonY, 0);
