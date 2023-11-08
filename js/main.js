@@ -27,7 +27,7 @@ async function main() {
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
 
-    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
     const renderer = new WebGLRenderer({ antialias: true });
     renderer.setClearColor(0xffffff);
@@ -38,62 +38,62 @@ async function main() {
     let skyboxSunsett = skyBoxloader.load([
         'resources/skyBox/Sunset/Sunset-left.png','resources/skyBox/Sunset/Sunset-Right.png'
         ,'resources/skyBox/Sunset/Sunset-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
-        ,'resources/skyBox/Sunset/Sunset-Back.png','resources/skyBox/Sunset/Sunset-front.png'
+        ,'resources/skyBox/Sunset/Sunset-front.png','resources/skyBox/Sunset/Sunset-Back.png'
     ])
 
     let skyboxEarlyDusk = skyBoxloader.load([
         'resources/skyBox/EarlyDusk/EarlyDusk-Left.png','resources/skyBox/EarlyDusk/EarlyDusk-Right.png'
         ,'resources/skyBox/EarlyDusk/EarlyDusk-bottom.png','resources/skyBox/EarlyDusk/EarlyDusk-top.png'
-        ,'resources/skyBox/EarlyDusk/EarlyDusk-Back.png','resources/skyBox/EarlyDusk/EarlyDusk-Front.png'
+        ,'resources/skyBox/EarlyDusk/EarlyDusk-Front.png','resources/skyBox/EarlyDusk/EarlyDusk-Back.png'
     ])
 
     let skyboxEftermidag = skyBoxloader.load([
         'resources/skyBox/Eftermidag/Eftermidag-Left.png','resources/skyBox/Eftermidag/Eftermidag-Right.png'
         ,'resources/skyBox/Eftermidag/Eftermidag-Bottom.png','resources/skyBox/Eftermidag/Eftermidag-Topp.png'
-        ,'resources/skyBox/Eftermidag/Eftermidag-back.png','resources/skyBox/Eftermidag/Eftermidag-Front.png'
+        ,'resources/skyBox/Eftermidag/Eftermidag-Front.png','resources/skyBox/Eftermidag/Eftermidag-back.png'
     ])
     let skyboxMidnight = skyBoxloader.load([
         'resources/skyBox/Midnight/MidNight-Left.png','resources/skyBox/Midnight/MidNight-Right.png'
         ,'resources/skyBox/Midnight/MidNight-Bottum.png','resources/skyBox/Midnight/MidNight-Top.png'
-        ,'resources/skyBox/Midnight/MidNight-Back.png','resources/skyBox/Midnight/MidNight-Front.png'
+        ,'resources/skyBox/Midnight/MidNight-Front.png','resources/skyBox/Midnight/MidNight-Back.png'
     ])
 
     let skyboxMorgen = skyBoxloader.load([
         'resources/skyBox/Morgen/Morgen-Left.png','resources/skyBox/Morgen/Morgen-Right.png'
         ,'resources/skyBox/Morgen/Morgen-bottom.png','resources/skyBox/Morgen/Morgen-Top.png'
-        ,'resources/skyBox/Morgen/Morgen-Back.png','resources/skyBox/Morgen/Morgen-Front.png'
+        ,'resources/skyBox/Morgen/Morgen-Front.png','resources/skyBox/Morgen/Morgen-Back.png'
     ])
     let skyboxNight = skyBoxloader.load([
         'resources/skyBox/Night/Night-left.png','resources/skyBox/Night/Night-Right.png'
         ,'resources/skyBox/Night/Night-Bottom.png','resources/skyBox/Night/Night-Top.png'
-        ,'resources/skyBox/Night/Night-back.png','resources/skyBox/Night/Night-Front.png'
+        ,'resources/skyBox/Night/Night-Front.png','resources/skyBox/Night/Night-back.png'
     ])
 
     let skyboxTidligMorgen = skyBoxloader.load([
         'resources/skyBox/TidligMorgen/TidligMorgen-left.png','resources/skyBox/TidligMorgen/TidligMorgen-Right.png'
         ,'resources/skyBox/TidligMorgen/TidligMorgen-bottom.png','resources/skyBox/TidligMorgen/TidligMorgen-top.png'
-        ,'resources/skyBox/TidligMorgen/TidligMorgen-back.png','resources/skyBox/TidligMorgen/TidligMorgen-Front.png'
+        ,'resources/skyBox/TidligMorgen/TidligMorgen-Front.png','resources/skyBox/TidligMorgen/TidligMorgen-back.png'
     ])
     let skyboxNoon = skyBoxloader.load([
         'resources/skyBox/noon/Noon-left.png','resources/skyBox/noon/Noon-Right.png'
         ,'resources/skyBox/noon/Noon-bottom.png','resources/skyBox/noon/Noon-top.png'
-        ,'resources/skyBox/noon/Noon-Back.png','resources/skyBox/noon/Noon-Front.png'
+        ,'resources/skyBox/noon/Noon-Front.png','resources/skyBox/noon/Noon-Back.png'
     ])
 
 
     let skybox = new THREE.Mesh(
-        new THREE.BoxGeometry(1000, 1000, 1000),
+        new THREE.BoxGeometry(7500, 7500, 7500),
         new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen ,side: THREE.DoubleSide} )
     );
     const skyboxes = [skyboxEarlyDusk,skyboxTidligMorgen,skyboxMorgen,skyboxNoon,skyboxEftermidag,skyboxSunsett,skyboxNight,skyboxMidnight]
 
-// Initialiser indeksen for den gjeldende skyboksen
+    // Initialiser indeksen for den gjeldende skyboksen
     let currentSkyboxIndex = 0;
     let lastSkyboxChangeTime = new Date().getTime();
-// Tid i millisekunder for hvert skybox-bytte
+    // Tid i millisekunder for hvert skybox-bytte
 
 
-// Funksjon for å bytte til neste skyboks
+    // Funksjon for å bytte til neste skyboks
     function switchToNextSkybox() {
         const timeSinceLastChange = new Date().getTime() - lastSkyboxChangeTime;
         const timePerSkyboxChange = 20000; // Tid per skyboksendring i millisekunder (her satt til 10 sekunder).
@@ -151,8 +151,8 @@ async function main() {
     directionalLight.target.position.set(0, 15, 0);
     scene.add(directionalLight.target);
 
-    camera.position.z = 70;
-    camera.position.y = 55;
+    camera.position.z = 500;
+    camera.position.y = 1000;
     camera.rotation.x -= Math.PI * 0.25;
 
 
@@ -165,15 +165,15 @@ async function main() {
      *  - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
      */
     const heightmapImage = await Utilities.loadImage('resources/images/heightmap.png');
-    const width = 100;
+    const width = 2000;
 
     const simplex = new SimplexNoise();
     const terrainGeometry = new TerrainBufferGeometry({
         width,
         heightmapImage,
         // noiseFn: simplex.noise.bind(simplex),
-        numberOfSubdivisions: 128,
-        height: 40
+        numberOfSubdivisions: 1024,
+        height: 700
     });
 
     const snowyRockTexture = new TextureLoader().load('resources/textures/snowy_rock_01.png');
@@ -190,7 +190,6 @@ async function main() {
     snowTexture.wrapS = RepeatWrapping;
     snowTexture.wrapT = RepeatWrapping;
     snowTexture.repeat.set(1000 / width, 1000 / width);
-
 
     const splatMap = new TextureLoader().load('resources/images/splatmap_01.png');
 
@@ -260,6 +259,59 @@ async function main() {
         }
     );
 
+    // Create a sun mesh
+    const sunGeometry = new THREE.SphereGeometry(100, 132, 132, Math.PI);
+    const sunTexture = new THREE.TextureLoader().load('resources/textures/texture_sun.jpg'); // Load sun texture
+    const sunMaterial = new THREE.MeshBasicMaterial({
+        map: sunTexture, // Apply the sun texture as a map
+    });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+
+    // Position the sun
+    //sun.position.set(0, 100, -200); // Adjust the position as needed
+
+    // Add the sun to the scene
+    scene.add(sun);
+
+    // Create a moon mesh
+    const moonGeometry = new THREE.SphereGeometry(100, 132, 132, 0);
+    const moonTexture = new THREE.TextureLoader().load('resources/textures/2k_moon.jpg'); // Load moon texture
+    const moonMaterial = new THREE.MeshBasicMaterial({
+        map: moonTexture, // Apply the moon texture as a map
+    });
+    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+    // Position the moon
+    //moon.position.set(0, -100, 200); // Adjust the position as needed
+
+    // Add the sun to the scene
+    scene.add(moon);
+
+    const celestialGroup = new THREE.Group();
+    scene.add(celestialGroup);
+
+    celestialGroup.add(sun);
+    celestialGroup.add(moon);
+
+    const distance = 3000;
+    const sunSpeed = 0.1;
+    const moonSpeed = 0.1;
+
+    function animateCelestials() {
+        const time = Date.now() * 0.0005;
+        const sunX = distance * Math.cos(time * sunSpeed);
+        const sunY = distance * Math.sin(time * sunSpeed);
+        const moonX = distance * Math.cos(Math.PI + time * moonSpeed);
+        const moonY = distance * Math.sin(Math.PI + time * moonSpeed);
+
+        sun.position.set(sunX, sunY, 0);
+        moon.position.set(moonX, moonY, 0);
+
+        requestAnimationFrame(animateCelestials);
+    }
+
+    animateCelestials();
+
     /**
      * Set up camera controller:
      */
@@ -296,7 +348,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
-        speed: 0.0225
+        speed: 0.75
     };
 
     window.addEventListener('keydown', (e) => {
