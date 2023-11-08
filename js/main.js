@@ -35,7 +35,7 @@ async function main() {
 
     let skyBoxloader = new THREE.CubeTextureLoader();
 
-    let skyboxSunset = skyBoxloader.load([
+    let skyboxSunsett = skyBoxloader.load([
         'resources/skyBox/Sunset/Sunset-left.png','resources/skyBox/Sunset/Sunset-Right.png'
         ,'resources/skyBox/Sunset/Sunset-Bottom.png','resources/skyBox/Sunset/Sunset-Top.png'
         ,'resources/skyBox/Sunset/Sunset-Back.png','resources/skyBox/Sunset/Sunset-front.png'
@@ -68,22 +68,48 @@ async function main() {
         ,'resources/skyBox/Night/Night-Bottom.png','resources/skyBox/Night/Night-Top.png'
         ,'resources/skyBox/Night/Night-back.png','resources/skyBox/Night/Night-Front.png'
     ])
+
     let skyboxTidligMorgen = skyBoxloader.load([
-        'resources/skyBox/TidligMorgen/TidligMorgen-Left.png','resources/skyBox/TidligMorgen/TidligMorgen-Right.png'
-        ,'resources/skyBox/TidligMorgen/TidligMorgen-Bottom.png','resources/skyBox/TidligMorgen/TidligMorgen-top.png'
-        ,'resources/skyBox/TidligMorgen/TidligMorgen-Back.png','resources/skyBox/TidligMorgen/TidligMorgen-Front.png'
+        'resources/skyBox/TidligMorgen/TidligMorgen-left.png','resources/skyBox/TidligMorgen/TidligMorgen-Right.png'
+        ,'resources/skyBox/TidligMorgen/TidligMorgen-bottom.png','resources/skyBox/TidligMorgen/TidligMorgen-top.png'
+        ,'resources/skyBox/TidligMorgen/TidligMorgen-back.png','resources/skyBox/TidligMorgen/TidligMorgen-Front.png'
+    ])
+    let skyboxNoon = skyBoxloader.load([
+        'resources/skyBox/noon/Noon-left.png','resources/skyBox/noon/Noon-Right.png'
+        ,'resources/skyBox/noon/Noon-bottom.png','resources/skyBox/noon/Noon-top.png'
+        ,'resources/skyBox/noon/Noon-Back.png','resources/skyBox/noon/Noon-Front.png'
     ])
 
-    let skyBoxTextures = [skyboxSunset, skyboxEarlyDusk, skyboxEftermidag, skyboxMidnight, skyboxMorgen, skyboxNight, skyboxTidligMorgen];
 
     let skybox = new THREE.Mesh(
-        new THREE.BoxGeometry(500, 500, 500),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen, side: THREE.BackSide })
+        new THREE.BoxGeometry(1000, 1000, 1000),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen ,side: THREE.DoubleSide} )
     );
+    const skyboxes = [skyboxEarlyDusk,skyboxTidligMorgen,skyboxMorgen,skyboxNoon,skyboxEftermidag,skyboxSunsett,skyboxNight,skyboxMidnight]
 
+// Initialiser indeksen for den gjeldende skyboksen
+    let currentSkyboxIndex = 0;
+    let lastSkyboxChangeTime = new Date().getTime();
+// Tid i millisekunder for hvert skybox-bytte
+
+
+// Funksjon for å bytte til neste skyboks
+    function switchToNextSkybox() {
+        const timeSinceLastChange = new Date().getTime() - lastSkyboxChangeTime;
+        const timePerSkyboxChange = 20000; // Tid per skyboksendring i millisekunder (her satt til 10 sekunder).
+
+        if (timeSinceLastChange >= timePerSkyboxChange) {
+            currentSkyboxIndex = (currentSkyboxIndex + 1) % skyboxes.length;
+            skybox.material.envMap = skyboxes[currentSkyboxIndex];
+            lastSkyboxChangeTime = new Date().getTime();
+        }
+    }
+
+    function updateSkyboxPosition() {
+        skybox.position.copy(camera.position);
+    }
     scene.add(skybox);
 
-    skybox.renderOrder = 1000;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
 
@@ -114,8 +140,8 @@ async function main() {
     directionalLight.castShadow = true;
 
     //Set up shadow properties for the light
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.mapSize.width = 512;
+    directionalLight.shadow.mapSize.height = 512;
     directionalLight.shadow.camera.near = 0.5;
     directionalLight.shadow.camera.far = 2000;
 
@@ -270,7 +296,7 @@ async function main() {
         backward: false,
         left: false,
         right: false,
-        speed: 0.1
+        speed: 0.0225
     };
 
     window.addEventListener('keydown', (e) => {
@@ -338,11 +364,13 @@ async function main() {
         mouseLookController.update(pitch, yaw);
         yaw = 0;
         pitch = 0;
+        switchToNextSkybox(); // Bytt til den første skyboksen
+
 
         // apply rotation to velocity vector, and translate moveNode with it.
         velocity.applyQuaternion(camera.quaternion);
         camera.position.add(velocity);
-
+        updateSkyboxPosition();
         // render scene:
         renderer.render(scene, camera);
 
