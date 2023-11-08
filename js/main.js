@@ -91,10 +91,11 @@ async function main() {
         new THREE.BoxGeometry(7500, 7500, 7500),
         new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen ,side: THREE.DoubleSide} )
     );
-    const skyboxes = [skyboxEarlyDusk,skyboxTidligMorgen,skyboxMorgen,skyboxNoon,skyboxEftermidag,skyboxSunsett,skyboxNight,skyboxMidnight]
+    const skyboxes = [skyboxEarlyDusk,skyboxTidligMorgen,skyboxMorgen,skyboxNoon,skyboxEftermidag,
+                                skyboxSunsett, skyboxNight, skyboxMidnight, skyboxMidnight]
 
     // Initialiser indeksen for den gjeldende skyboksen
-    let currentSkyboxIndex = 0;
+    let currentSkyboxIndex = 1;
     let lastSkyboxChangeTime = new Date().getTime();
     // Tid i millisekunder for hvert skybox-bytte
 
@@ -300,8 +301,8 @@ async function main() {
     celestialGroup.add(moon);
 
     const distance = 3000;
-    const sunSpeed = 0.05;
-    const moonSpeed = 0.05;
+    const sunSpeed = 0.07;
+    const moonSpeed = 0.07;
 
     const clock = new THREE.Clock();
     function animateCelestials() {
