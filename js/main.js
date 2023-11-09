@@ -26,7 +26,7 @@ async function main() {
 
     // fog
     const near = 1;
-    const far = 4500;
+    const far = 6000;
     const color = 0xaaaaaa; // adjust color as needed
     scene.fog = new THREE.Fog(color, near, far);
 
@@ -92,7 +92,7 @@ async function main() {
         new THREE.MeshBasicMaterial({ color: 0xffffff, envMap: skyboxTidligMorgen ,side: THREE.DoubleSide} )
     );
     const skyboxes = [skyboxEarlyDusk,skyboxTidligMorgen,skyboxMorgen,skyboxNoon,skyboxEftermidag,
-                                skyboxSunsett, skyboxNight, skyboxMidnight, skyboxMidnight]
+                                skyboxSunsett, skyboxNight, skyboxMidnight, skyboxMidnight, skyboxMidnight]
 
     // Initialiser indeksen for den gjeldende skyboksen
     let currentSkyboxIndex = 1;
@@ -198,12 +198,17 @@ async function main() {
     snowTexture.wrapT = RepeatWrapping;
     snowTexture.repeat.set(1000 / width, 1000 / width);
 
+    const rockTexture = new TextureLoader().load('resources/textures/rock_01.jpg');
+    snowTexture.wrapS = RepeatWrapping;
+    snowTexture.wrapT = RepeatWrapping;
+    snowTexture.repeat.set(1000 / width, 1000 / width);
+
     const splatMap = new TextureLoader().load('resources/images/splatmap_01.png');
 
     const terrainMaterial = new TextureSplattingMaterial({
         color: 0xffffff,
         shininess: 0,
-        textures: [snowyRockTexture, grassTexture, snowTexture],
+        textures: [snowyRockTexture, grassTexture, snowTexture, rockTexture],
         splatMaps: [splatMap]
     });
 
@@ -217,8 +222,7 @@ async function main() {
     /**
      * Add trees
      */
-
-        // instantiate a GLTFLoader:
+    // instantiate a GLTFLoader:
     const loader = new GLTFLoader();
 
     loader.load(
@@ -226,15 +230,15 @@ async function main() {
         'resources/models/kenney_nature_kit/tree_thin.glb',
         // called when resource is loaded
         (object) => {
-            for (let x = -50; x < 50; x += 8) {
-                for (let z = -50; z < 50; z += 8) {
+            for (let x = -300; x < 300; x += Math.random() * 10 + 80) {
+                for (let z = -300; z < 300; z += Math.random() * 10 + 80) {
 
                     const px = x + 1 + (6 * Math.random()) - 3;
                     const pz = z + 1 + (6 * Math.random()) - 3;
 
                     const height = terrainGeometry.getHeightAt(px, pz);
 
-                    if (height < 5) {
+                    if (height < 140) {
                         const tree = object.scene.children[0].clone();
 
                         tree.traverse((child) => {
@@ -246,11 +250,11 @@ async function main() {
 
                         tree.position.x = px;
                         tree.position.y = height - 0.01;
-                        tree.position.z = pz;
+                        tree.position.z = pz + 500;
 
                         tree.rotation.y = Math.random() * (2 * Math.PI);
 
-                        tree.scale.multiplyScalar(1.5 + Math.random() * 1);
+                        tree.scale.multiplyScalar(70 + Math.random() * 1);
 
                         scene.add(tree);
                     }
@@ -301,8 +305,8 @@ async function main() {
     celestialGroup.add(moon);
 
     const distance = 3000;
-    const sunSpeed = 0.07;
-    const moonSpeed = 0.07;
+    const sunSpeed = 0.065;
+    const moonSpeed = 0.065;
 
     const clock = new THREE.Clock();
     function animateCelestials() {
