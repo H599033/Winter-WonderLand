@@ -18,13 +18,7 @@ import Terrain from './terrain/Terrain.js'
 async function main() {
 
     const scene = new Scene();
-
-    // fog
-    const near = 1;
-    const far = 5000;
-    const color = 0xaaaaaa; // adjust color as needed
-    scene.fog = new THREE.Fog(color, near, far);
-
+    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
