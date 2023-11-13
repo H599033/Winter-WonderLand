@@ -26,9 +26,10 @@ async function main() {
 
     // fog
     const near = 1;
-    const far = 6000;
+    const far = 5000;
     const color = 0xaaaaaa; // adjust color as needed
     scene.fog = new THREE.Fog(color, near, far);
+
 
     const axesHelper = new AxesHelper(15);
     scene.add(axesHelper);
@@ -186,30 +187,34 @@ async function main() {
     const snowyRockTexture = new TextureLoader().load('resources/textures/snowy_rock_01.png');
     snowyRockTexture.wrapS = RepeatWrapping;
     snowyRockTexture.wrapT = RepeatWrapping;
-    snowyRockTexture.repeat.set(1500 / width, 1500 / width);
+    snowyRockTexture.repeat.set(3000 / width, 3000 / width);
 
     const grassTexture = new TextureLoader().load('resources/textures/grass_02.png');
     grassTexture.wrapS = RepeatWrapping;
     grassTexture.wrapT = RepeatWrapping;
-    grassTexture.repeat.set(5000 / width, 5000 / width);
+    grassTexture.repeat.set(3000 / width, 3000 / width);
 
     const snowTexture = new TextureLoader().load('resources/textures/snow-covered-land.jpg');
     snowTexture.wrapS = RepeatWrapping;
     snowTexture.wrapT = RepeatWrapping;
-    snowTexture.repeat.set(1000 / width, 1000 / width);
+    snowTexture.repeat.set(12000 / width, 12000 / width);
 
-    const rockTexture = new TextureLoader().load('resources/textures/rock_01.jpg');
+    const waterTexture = new TextureLoader().load('resources/textures/water.png');
     snowTexture.wrapS = RepeatWrapping;
     snowTexture.wrapT = RepeatWrapping;
-    snowTexture.repeat.set(1000 / width, 1000 / width);
+    snowTexture.repeat.set(5000 / width, 5000 / width);
 
-    const splatMap = new TextureLoader().load('resources/images/splatmap_01.png');
+
+    const splatMap = new TextureLoader().load('resources/images/splatmapI.png');
+    const splatMap2 = new TextureLoader().load('resources/images/splatmapV.png');
+    const splatMap3 = new TextureLoader().load('resources/images/splatmapVI.png');
+    const splatMap4 = new TextureLoader().load('resources/images/splatmapVII.png');
+
 
     const terrainMaterial = new TextureSplattingMaterial({
-        color: 0xffffff,
         shininess: 0,
-        textures: [snowyRockTexture, grassTexture, snowTexture, rockTexture],
-        splatMaps: [splatMap]
+        textures: [snowyRockTexture, snowTexture, waterTexture, grassTexture],
+        splatMaps: [splatMap, splatMap2, splatMap3, splatMap4]
     });
 
     const terrain = new Mesh(terrainGeometry, terrainMaterial);
@@ -230,15 +235,15 @@ async function main() {
         'resources/models/kenney_nature_kit/tree_thin.glb',
         // called when resource is loaded
         (object) => {
-            for (let x = -300; x < 300; x += Math.random() * 10 + 80) {
-                for (let z = -300; z < 300; z += Math.random() * 10 + 80) {
+            for (let x = -300; x < 300; x += Math.random() * 50 + 80) {
+                for (let z = -300; z < 300; z += Math.random() * 50 + 80) {
 
                     const px = x + 1 + (6 * Math.random()) - 3;
                     const pz = z + 1 + (6 * Math.random()) - 3;
 
                     const height = terrainGeometry.getHeightAt(px, pz);
 
-                    if (height < 140) {
+                    if (height < 300) {
                         const tree = object.scene.children[0].clone();
 
                         tree.traverse((child) => {
@@ -250,7 +255,7 @@ async function main() {
 
                         tree.position.x = px;
                         tree.position.y = height - 0.01;
-                        tree.position.z = pz + 500;
+                        tree.position.z = pz + 700;
 
                         tree.rotation.y = Math.random() * (2 * Math.PI);
 
@@ -269,6 +274,7 @@ async function main() {
             console.error('Error loading model.', error);
         }
     );
+
 
     // Create a sun mesh
     const sunGeometry = new THREE.SphereGeometry(100, 132, 132, Math.PI);
@@ -304,25 +310,43 @@ async function main() {
     celestialGroup.add(sun);
     celestialGroup.add(moon);
 
+
+
     const distance = 3000;
     const sunSpeed = 0.065;
     const moonSpeed = 0.065;
 
+    // Create a directional light for the moon with a specific color and intensity.
+    const moonDirectionalLight = new THREE.DirectionalLight(0x375a7f, 0.5); // Set the intensity to 0.5 (50% brightness)
+
+    moonDirectionalLight.position.set(0, 0, 0); // Adjust the position as needed
+    scene.add(moonDirectionalLight);
+
     const clock = new THREE.Clock();
     function animateCelestials() {
         const elapsedTime = clock.getElapsedTime();
+
         const sunX = distance * Math.cos(elapsedTime * sunSpeed);
         const sunY = distance * Math.sin(elapsedTime * sunSpeed);
+
         const moonX = distance * Math.cos(Math.PI + elapsedTime * moonSpeed);
         const moonY = distance * Math.sin(Math.PI + elapsedTime * moonSpeed);
 
         sun.position.set(sunX, sunY, 0);
         moon.position.set(moonX, moonY, 0);
 
+        // Update the position of a directional light to simulate the sun's position.
+        directionalLight.position.copy(sun.position);
+
+        // Set the position of the point light (moonlight) to match the moon's position.
+        moonDirectionalLight.position.copy(moon.position);
+
         requestAnimationFrame(animateCelestials);
     }
 
     animateCelestials();
+
+
 
     /**
      * Set up camera controller:
