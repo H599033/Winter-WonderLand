@@ -88,7 +88,7 @@ export default class Terrain {
 
                 cabin.rotation.y = Math.PI / 4;
 
-                cabin.scale.multiplyScalar(0.1);
+                cabin.scale.multiplyScalar(0.08);
 
                 this.scene.add(cabin);
             },
@@ -107,36 +107,7 @@ export default class Terrain {
         loader.load(
             'resources/models/kenney_nature_kit/tree_thin.glb',
             (object) => {
-                for (let x = -200; x < 200; x += Math.random() * 50 + 80) {
-                    for (let z = -200; z < 200; z += Math.random() * 50 + 80) {
-
-                        const px = x + 1 + (6 * Math.random()) - 3;
-                        const pz = z + 1 + (6 * Math.random()) - 3;
-
-                        const height = this.terrainGeometry.getHeightAt(px, pz);
-
-                        if (height < 600) {
-                            const tree = object.scene.children[0].clone();
-
-                            tree.traverse((child) => {
-                                if (child.isMesh) {
-                                    child.castShadow = true;
-                                    child.receiveShadow = true;
-                                }
-                            });
-
-                            tree.position.x = px + 300;
-                            tree.position.y = height - 280;
-                            tree.position.z = pz + 800;
-
-                            tree.rotation.y = Math.random() * (2 * Math.PI);
-
-                            tree.scale.multiplyScalar(70 + Math.random() * 1);
-
-                            this.scene.add(tree);
-                        }
-                    }
-                }
+                this.placeTrees(object);
             },
             (xhr) => {
                 console.log(((xhr.loaded / xhr.total) * 100) + '% loaded');
@@ -145,5 +116,36 @@ export default class Terrain {
                 console.error('Error loading model.', error);
             }
         );
+    }
+
+    placeTrees(treeObject) {
+        for (let x = -400; x < 210; x += Math.random() * 115 + 157) {
+            for (let z = -190; z < 210; z += Math.random() * 120 + 143) {
+                const px = x + 1 + (6 * Math.random()) - 3;
+                const pz = z + 1 + (6 * Math.random()) - 3;
+                const height = this.terrainGeometry.getHeightAt(px, pz);
+
+                if (height < 600) {
+                    const tree = treeObject.scene.children[0].clone();
+
+                    tree.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+
+                    tree.position.x = px + 300;
+                    tree.position.y = height - 260;
+                    tree.position.z = pz + 800;
+
+                    tree.rotation.y = Math.random() * (2 * Math.PI);
+
+                    tree.scale.multiplyScalar(120 + Math.random() * 1);
+
+                    this.scene.add(tree);
+                }
+            }
+        }
     }
 }
