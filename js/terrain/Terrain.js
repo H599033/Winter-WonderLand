@@ -11,8 +11,10 @@ export default class Terrain {
         this.scene = scene;
         this.width = width;
         this.height = height;
+        this.scene.receiveShadow = true;
+        this.scene.castShadow = true;
         this.setupTerrain();
-        this.loadCabin(-150,this.height - 370,-200,Math.PI / 4);
+        this.loadCabin(-200,this.height - 370,-200,Math.PI *3.2);
         this.loadCabin(150,this.height - 370,-350,Math.PI );
         this.loadCabin(500,this.height - 370,-200,Math.PI/1.5 );
     }
@@ -37,18 +39,20 @@ export default class Terrain {
         const splatMap4 = this.loadSplatMap('resources/images/splatmapVII.png');
 
         const terrainMaterial = new TextureSplattingMaterial({
-            shininess: 0,
+            specular: 0x222222,
+            color: 0xffffff,
+            shininess: 1,
+            reflectivity: 0.01,
+
             textures: [snowyRockTexture, snowTexture, waterTexture, grassTexture],
             splatMaps: [splatMap, splatMap2, splatMap3, splatMap4]
+
         });
 
         this.terrain = new Mesh(this.terrainGeometry, terrainMaterial);
-
-        this.terrain.castShadow = true;
-        this.terrain.receiveShadow = true;
-
+        this.terrain.material.side = THREE.DoubleSide;
+        this.terrain.receiveShadow= true;
         this.loadTrees();
-
         this.scene.add(this.terrain);
     }
 
@@ -67,31 +71,36 @@ export default class Terrain {
     loadCabin(posX, posY, posz, rot) {
         const loader = new GLTFLoader();
         loader.load(
-            'resources/models/hytte.glb',
+            'resources/models/scene2.glb',
             (object) => {
                 const cabin = object.scene.children[0].clone();
 
                 cabin.traverse((child) => {
-
                     if (child.isMesh) {
+                        const texture = new TextureLoader().load('resources/textures/Farmhouse Texture.jpg');
 
-                        const texture = new TextureLoader().load('resources/textures/hytte_texture.png');
-                        child.material = new THREE.MeshStandardMaterial({map: texture});
+                        const material = new THREE.MeshStandardMaterial({
+                            map: texture,
+                            emissiveIntensity: 0
+                        });
+
+                        child.material = material;
                         child.castShadow = true;
                         child.receiveShadow = true;
+
+                        // Opprett et punktlys med tilpassede egenskaper funker ikke helt. funker greit hvis byggningene er mindre
+                        const pointLight = new THREE.PointLight(0xffccaa, 1, 700); // farge, intensitet, rekkevidde
+                        pointLight.position.set(posX, posY , posz); // Angi lysposisjon, juster etter behov
+                        this.scene.add(pointLight);
+
+                        // Legg til punktlyset som et barn av mesh (hvis du vil at det skal bevege seg med mesh)
+                        child.add(pointLight);
                     }
                 });
-
                 // Set cabin position, rotation, and scale as per your requirements
-                cabin.position.x = posX;
-                cabin.position.y = posY;
-                cabin.position.z = posz;
-
-
+                cabin.position.set(posX, posY, posz);
                 cabin.rotation.y = rot;
-
-                cabin.scale.multiplyScalar(0.08);
-
+                cabin.scale.multiplyScalar(4);
                 this.scene.add(cabin);
             },
             (xhr) => {
@@ -122,15 +131,14 @@ export default class Terrain {
 
 
     placeTrees(treeObject) {
-        for (let x = -100; x < 700; x += Math.random() * 115 + 157) {
-            for (let z = 500; z < 1000; z += Math.random() * 120 + 143) {
+        for (let x = -100; x < 600; x += Math.random() * 115 + 157) {
+            for (let z = 600; z <900; z += Math.random() * 120 + 143) {
                 const px = x + 1 + (100 * Math.random()) - 3;
                 const pz = z + 1 + (100 * Math.random()) - 3;
                 const height = this.terrainGeometry.getHeightAt(px, pz);
 
                 if (height < 600) {
                     const tree = treeObject.scene.children[0].clone();
-
                     tree.traverse((child) => {
                         if (child.isMesh) {
                             child.castShadow = true;
@@ -141,11 +149,8 @@ export default class Terrain {
                     tree.position.x = px ;
                     tree.position.y = height -0.1;
                     tree.position.z = pz;
-
                     tree.rotation.y = Math.random() * (2 * Math.PI);
-
                     tree.scale.multiplyScalar(120 + Math.random() * 1);
-
                     this.scene.add(tree);
                 }
             }
