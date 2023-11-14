@@ -15,10 +15,10 @@ export default class CelestialManager {
         this.directionalLight = new THREE.DirectionalLight(0xffffff);
         this.directionalLight.position.set(300, 400, 0);
         this.directionalLight.castShadow = true;
-        this.directionalLight.shadow.mapSize.width = 512;
-        this.directionalLight.shadow.mapSize.height = 512;
+        this.directionalLight.shadow.mapSize.width = 2040;
+        this.directionalLight.shadow.mapSize.height = 2040;
         this.directionalLight.shadow.camera.near = 0.5;
-        this.directionalLight.shadow.camera.far = 2000;
+        this.directionalLight.shadow.camera.far = 5000;
         this.scene.add(this.directionalLight);
     }
 
@@ -50,7 +50,7 @@ export default class CelestialManager {
     }
 
     setupMoonDirectionalLight() {
-        this.moonDirectionalLight = new THREE.DirectionalLight(0x375a7f, 0.5);
+        this.moonDirectionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         this.moonDirectionalLight.position.set(0, 0, 0);
         this.scene.add(this.moonDirectionalLight);
     }

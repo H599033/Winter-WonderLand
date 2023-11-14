@@ -12,12 +12,13 @@ export default class Terrain {
         this.width = width;
         this.height = height;
         this.setupTerrain();
-        this.loadCabin();
+        this.loadCabin(-150,this.height - 370,-200,Math.PI / 4);
+        this.loadCabin(150,this.height - 370,-350,Math.PI );
+        this.loadCabin(500,this.height - 370,-200,Math.PI/1.5 );
     }
 
     async setupTerrain() {
         const heightmapImage = await Utilities.loadImage('resources/images/heightmap.png');
-        const simplex = new SimplexNoise();
         this.terrainGeometry = new TerrainBufferGeometry({
             width: this.width,
             heightmapImage,
@@ -63,7 +64,7 @@ export default class Terrain {
         return new TextureLoader().load(path);
     }
 
-    loadCabin() {
+    loadCabin(posX, posY, posz, rot) {
         const loader = new GLTFLoader();
         loader.load(
             'resources/models/hytte.glb',
@@ -82,11 +83,12 @@ export default class Terrain {
                 });
 
                 // Set cabin position, rotation, and scale as per your requirements
-                cabin.position.x = 100;
-                cabin.position.y = this.height - 370;
-                cabin.position.z = -200;
+                cabin.position.x = posX;
+                cabin.position.y = posY;
+                cabin.position.z = posz;
 
-                cabin.rotation.y = Math.PI / 4;
+
+                cabin.rotation.y = rot;
 
                 cabin.scale.multiplyScalar(0.08);
 
@@ -118,11 +120,12 @@ export default class Terrain {
         );
     }
 
+
     placeTrees(treeObject) {
-        for (let x = -400; x < 210; x += Math.random() * 115 + 157) {
-            for (let z = -190; z < 210; z += Math.random() * 120 + 143) {
-                const px = x + 1 + (6 * Math.random()) - 3;
-                const pz = z + 1 + (6 * Math.random()) - 3;
+        for (let x = -100; x < 700; x += Math.random() * 115 + 157) {
+            for (let z = 500; z < 1000; z += Math.random() * 120 + 143) {
+                const px = x + 1 + (100 * Math.random()) - 3;
+                const pz = z + 1 + (100 * Math.random()) - 3;
                 const height = this.terrainGeometry.getHeightAt(px, pz);
 
                 if (height < 600) {
@@ -135,9 +138,9 @@ export default class Terrain {
                         }
                     });
 
-                    tree.position.x = px + 300;
-                    tree.position.y = height - 260;
-                    tree.position.z = pz + 800;
+                    tree.position.x = px ;
+                    tree.position.y = height -0.1;
+                    tree.position.z = pz;
 
                     tree.rotation.y = Math.random() * (2 * Math.PI);
 
